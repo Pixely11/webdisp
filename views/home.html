@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <script src='static/main.js'></script>
+        <link rel='stylesheet' href='static/main.css'/>
+        <title>display</title>
+    </head>
+    <body>
+        %if topbar == 1:
+            <div> <!-- TODO -->
+                <div id=sidenav class="sidenav"> <!-- sidenav -->
+                    <button class="closebtn" onclick="closebar()">
+                        <span class="navitem">&times;</span>
+                    </button>
+                </div>
+
+                <div class='topnav'>
+                    <button class='button unsplit' onclick="openbar()">
+                        <span style='font-size: 30px;'>&#9776;</span>
+                    </button>
+                    <input style='line-height: 2em;' class='textfield split' type="text" placeholder="search">
+                </div>
+            </div>
+        %end
+        <div style="margin-left:10%;margin-right:10%;">
+
+            %if len(graphs) != 0:
+                %for i in graphs:
+                    <div>
+                        <input type="checkbox" onclick="hideorshow(this);">
+                        <figure>
+                            <embed width="90%" height="90%" type="image/svg+xml" src={{'static/' + i + '.svg'}} />
+                        </figure>
+                    </div>
+                %end
+            %end
+
+            %for t in data:
+                <div>
+                    <input type="checkbox" onclick="hideorshowtable(this);">
+                    <table style='width: 100%;'>
+                        %buffer = []
+                        %def heads(k):
+                            %global buffer
+                            %buffer = [] 
+                            <tr>
+                            %for i in k:
+                                %if type(i) == list:
+                                    %for j in i:
+                                        %buffer.append(j)
+                                    %end
+                                %else:
+                                    <th>{{i}}</th>
+                                %end
+                            %end
+                            </tr>
+                            %if buffer != []:
+                                %heads(buffer)
+                                %buffer = []
+                            %end
+                        %end
+                        %heads(t[0])
+
+                        %for i in range(1,len(t)):
+                            <tr>
+                                %for j in t[i]:
+                                    <td>{{j}}</td>
+                                %end
+                            </tr>
+                        %end
+                    </table>
+                </div>
+            %end
+        </div>
+    </body>
+</html>
